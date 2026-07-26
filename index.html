@@ -2,11 +2,417 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Chimuelita</title>
+        <title>𝓉𝓮 𝒶𝓂𝓸 𝒸𝒽𝒾𝓂𝓊𝓮𝓁𝒾𝓉𝒶 ♡</title>
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1>Chimuelita</h1>
-        <script type="module" src="main.js"></script>
+        <div id="auth-flow">
+            <button id="auth-back-btn" class="hide">← Back</button>
+            <div id="step-splash" class="auth-step">
+                <div class="logo-shine-wrap">
+                    <img src="assets/anim/logo.png" class="logo-shine">
+                </div>
+            </div>
+            <div id="step-email" class="auth-step hide">
+                <h2>Welcome back</h2>
+                <input type="email" id="input-email" placeholder="Email" autocomplete="username">
+                <button id="btn-email-next">Continue</button>
+                <p class="auth-error" id="error-email"></p>
+            </div>
+            <div id="step-password" class="auth-step hide">
+                <h2>Enter the passcode</h2>
+                <input type="password" id="input-password" placeholder="Passcode" autocomplete="current-password">
+                <label class="remember-label">
+                    <input type="checkbox" id="input-remember">
+                    Remember me
+                </label>
+                <button id="btn-password-next">Continue</button>
+                <p class="auth-error" id="error-password"></p>
+            </div>
+            <div id="step-enroll" class="auth-step hide">
+                <h2>Set up 2FA</h2>
+                <p>Scan this with your authenticator app:</p>
+                <img id="enroll-qr" alt="2FA QR code">
+                <input type="text" id="input-enroll-code" placeholder="6-digit code" maxlength="6" inputmode="numeric">
+                <button id="btn-enroll-verify">Confirm</button>
+                <p class="auth-error" id="error-enroll"></p>
+            </div>
+            <div id="step-mfa" class="auth-step hide">
+                <h2>Enter your 2FA code</h2>
+                <input type="text" id="input-mfa-code" placeholder="6-digit code" maxlength="6" inputmode="numeric">
+                <button id="btn-mfa-verify">Verify</button>
+                <p class="auth-error" id="error-mfa"></p>
+            </div>
+        </div>
+        <div class="wrapper hide" id="site-content">
+            <img src="assets/layer-exports/vfx-screen.png" id="vfx"/>
+            <div id="static"></div>
+            <div class="darken hide"></div>
+            <button id="back-btn" class="hide">← Back</button>
+            <div id="video-modal" class="video-modal hide">
+                <video id="video-modal-player" playsinline></video>
+            </div>
+            <div id="spotify-modal" class="video-modal hide">
+                <iframe id="spotify-modal-player"
+                        style="border-radius: 12px;"
+                        width="352"
+                        height="152"
+                        frameborder="0"
+                        allowfullscreen=""
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+                </iframe>
+            </div>
+            <div id="mailbox-ui" class="ui hide">Mailbox</div>
+            <div id="popper-ui" class="ui hide">
+                <div class="ui-canvas">
+                    <div id="popper-reason">reasons why I love you ♡</div>
+                    <div class="popper-grid"></div>
+                </div>
+            </div>
+            <div id="cards-ui" class="ui hide">coming soon...</div>
+            <div id="journal-ui" class="ui hide">
+                <div class="ui-canvas">
+                    <div class="flipbook">
+                        <div class="hard string"></div>
+                        <div class="hard"></div>
+                        <div class="page">
+                            Our Memories
+                            <small id="days-together">x days together</small>
+                        </div>
+                        <div class="page">
+                            <!-- 1 -->
+                            <div class="page-text" style="top: 30px;">Winter Carnival</div>
+                            <div class="page-text" style="top: 50px;"><small>07.03.2026</small></div>
+                            <img data-supabase-path="memories/1/heart.png" class="page-item protected-photo" style="left: 50px; top: 115px; width: 200px;">
+                        </div>
+                        <div class="page">
+                            <!-- 2 -->
+                            <div class="page-text" style="top: 30px;">Dorm Olympics</div>
+                            <div class="page-text" style="top: 50px;"><small>22.03.2026</small></div>
+                            <img src="assets/journal/buttons/cassette.png" class="page-item spotify-trigger"
+                                data-spotify-track="30LBoQSk8gjcN0hWCWtdbF"
+                                style="left: 200px; top: 100px; width: 60px; cursor: pointer; transform: rotate(15deg);">
+                            <img src="assets/journal/tape/v1.png" class="page-item" style="left: 65px; top: 85px; width: 80px; transform: rotate(4deg); z-index: 1;">
+                            <img src="assets/journal/tape/v3.png" class="page-item" style="left: 150px; top: 172px; width: 80px; transform: rotate(-4deg); z-index: 1;">
+                            <img data-supabase-path="memories/2/couch.png" class="page-item protected-photo" style="left: 40px; top: 100px; width: 120px; transform: rotate(4deg);">
+                            <div class="polaroid" style="left: 130px; top: 180px; transform: rotate(-4deg);">
+                                <img data-supabase-path="memories/2/tee.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                        </div>
+                        <div class="page">
+                            <!-- 3 -->
+                            <div class="page-text" style="top: 30px;">Comp. Lab Dates</div>
+                            <div class="page-text" style="top: 50px;"><small>25.03.2026</small></div>
+                            <div class="page-note" style="--s: 15px; --x: 170px; --y: 90px; --r: 4deg;"><i>after mario kart...</i></div>
+                            <div class="polaroid" style="left: 50px; top: 205px; transform: rotate(2deg);">
+                                <img data-supabase-path="memories/3/phasmo.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <div class="page-note" style="--s: 12px; --x: 63px; --y: 350px; --r: 2deg;"><i>Phasmophobia clauset</i></div>
+                            <div class="polaroid" style="left: 135px; top: 130px; transform: rotate(4deg);">
+                                <img data-supabase-path="memories/3/cats.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <div class="polaroid" style="left: 25px; top: 100px; transform: rotate(-6deg);">
+                                <img data-supabase-path="memories/3/us.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                        </div>
+                        <div class="page">
+                            <!-- 4 -->
+                            <div class="page-text" style="top: 30px;">Boston</div>
+                            <div class="page-text" style="top: 50px;"><small>28.03.2026</small></div>
+                            <div class="page-note" style="--s: 15px; --x: 70px; --y: 350px; --r: -2deg;"><i>first kiss ♡</i></div>
+                            <img src="assets/journal/buttons/camcorder.png" class="page-item video-trigger" 
+                                data-supabase-path="memories/4/vlog.mp4"
+                                style="left: 205px; top: 25px; width: 60px; cursor: pointer;">
+                            <img data-supabase-path="memories/4/subway.png" class="page-item protected-photo" style="left: 40px; top: 95px; width: 180px;">
+                            <img data-supabase-path="memories/4/strip.png" class="page-item protected-photo" style="left: 180px; top: 120px; width: 80px; transform: rotate(6deg);">
+                        </div>
+                        <div class="page">
+                            <!-- 5 -->
+                            <div class="page-text" style="top: 30px;">Factory</div>
+                            <div class="page-text" style="top: 50px;"><small>16.04.2026 and 21.5.2026</small></div>
+                            <img data-supabase-path="memories/5/chabe.png" class="page-item protected-photo" style="left: 40px; top: 85px; width: 220px;">
+                            <img data-supabase-path="memories/5/snoopy.png" class="page-item protected-photo" style="left: 20px; top: 270px; width: 140px; transform: rotate(-6deg);">
+                            <img src="assets/journal/tape/v2.png" class="page-item" style="left: 45px; top: 260px; width: 80px; transform: rotate(-6deg); z-index: 1;">
+                            <img data-supabase-path="memories/5/love.png" class="page-item protected-photo" style="left: 200px; top: 220px; width: 100px; transform: rotate(6deg);">
+                        </div>
+                        <div class="page">
+                            <!-- 6 -->
+                            <div class="page-text" style="top: 30px;">Promprosal</div>
+                            <div class="page-text" style="top: 50px;"><small>05.04.2026</small></div>
+                            <div class="polaroid" style="left: 75px; top: 90px; transform: rotate(-2deg);">
+                                <img data-supabase-path="memories/6/selfie.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <img data-supabase-path="memories/6/signs.png" class="page-item protected-photo" style="left: 0px; top: 192px; width: 300px;">
+                        </div>
+                        <div class="page">
+                            <!-- 7 -->
+                            <div class="page-text" style="top: 30px;">Escapades</div>
+                            <div class="page-text" style="top: 50px;"><small>29.04.2026</small></div>
+                            <img src="assets/journal/petals/septa/v1.png" class="page-item" style="left: 5px; top: 150px; width: 300px; transform: rotate(-50deg);">
+                            <div class="polaroid" style="left: 25px; top: 90px; transform: rotate(-6deg);">
+                                <img data-supabase-path="memories/7/room.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <div class="polaroid" style="left: 140px; top: 180px; transform: rotate(6deg);">
+                                <img data-supabase-path="memories/7/mark.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <img data-supabase-path="memories/7/quokka.png" class="page-item protected-photo" style="left: 50px; top: 250px; width: 120px;">
+                            <img src="assets/journal/tape/v5.png" class="page-item" style="left: 70px; top: 240px; width: 80px; z-index: 1;">
+                        </div>
+                        <div class="page">
+                            <!-- 8 -->
+                            <div class="page-text" style="top: 30px;">More Comp. Lab</div>
+                            <div class="page-text" style="top: 50px;"><small>09.05.2026</small></div>
+                            <div class="page-note" style="--s: 14px; --x: 190px; --y: 100px; --r: 5deg;"><i>no one to sit <br> on my lap ):</i></div>
+                            <div class="iphone" style="left: 30px; top: 90px; transform: rotate(-4deg);">
+                                <img data-supabase-path="memories/8/sitting.PNG" class="iphone-photo protected-photo" style="object-position: 50% 0%;">
+                                <img src="assets/journal/frames/iphone/iphone-frame.png" class="iphone-frame">
+                            </div>
+                            <div class="polaroid" style="left: 140px; top: 180px; transform: rotate(6deg);">
+                                <img data-supabase-path="memories/8/salsa-crying.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <div class="page-note" style="--s: 12px; --x: 170px; --y: 323px; --r: 6deg;"><i>Salsa lessons</i></div>
+                            <img src="assets/journal/tape/v6.png" class="page-item" style="left: 177px; top: 170px; width: 80px; transform: rotate(6deg); z-index: 1;">
+                        </div>
+                        <div class="page">
+                            <!-- 9 -->
+                            <div class="page-text" style="top: 30px;">My Birthday</div>
+                            <div class="page-text" style="top: 50px;"><small>11.05.2026</small></div>
+                            <img data-supabase-path="memories/9/photo.png" class="page-item protected-photo" style="left: 50px; top: 90px; width: 200px;">
+                            <img data-supabase-path="memories/9/art.png" class="page-item protected-photo" style="left: 50px; top: 220px; width: 100px; transform: rotate(3deg);">
+                            <img src="assets/journal/buttons/cassette.png" class="page-item spotify-trigger"
+                                data-spotify-track="15U5RHzuLMPNFThQqfKL0U"
+                                style="left: 200px; top: 75px; width: 60px; cursor: pointer; transform: rotate(15deg);">
+                            <div class="page-note" style="--s: 14px; --x: 170px; --y: 273px; --r: -2deg;"><i>best bday ever (:<br>tysm ♡</i></div>
+                        </div>
+                        <div class="page">
+                            <!-- 10 -->
+                            <div class="page-text" style="top: 30px;">Prom</div>
+                            <div class="page-text" style="top: 50px;"><small>16.05.2026</small></div>
+                            <img src="assets/journal/petals/quad/v1.png" class="page-item" style="left: 50px; top: 100px; width: 200px; transform: rotate(180deg);">
+                            <img src="assets/journal/petals/double/v10.png" class="page-item" style="left: 90px; top: 220px; width: 130px; transform: rotate(-10deg);">
+                            <img data-supabase-path="memories/10/party.png" class="page-item protected-photo" style="left: 120px; top: 90px; width: 150px;">
+                            <img src="assets/journal/tape/v4.png" class="page-item" style="left: 155px; top: 80px; width: 80px; z-index: 1;">
+                            <div class="polaroid" style="left: 30px; top: 200px; transform: rotate(-10deg);">
+                                <img data-supabase-path="memories/10/carry.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                        </div>
+                        <div class="page">
+                            <!-- 11 -->
+                            <div class="page-text" style="top: 30px;">Project Graduation</div>
+                            <div class="page-text" style="top: 50px;"><small>17.05.2026</small></div>
+                            <div class="polaroid" style="left: 20px; top: 90px; transform: rotate(-6deg);">
+                                <img data-supabase-path="memories/11/park.png" class="polaroid-photo protected-photo" style="object-position: 60% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <div class="polaroid" style="left: 135px; top: 120px; transform: rotate(12deg);">
+                                <img data-supabase-path="memories/11/skittles.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <img data-supabase-path="memories/11/arm.png" class="page-item protected-photo" style="left: 40px; top: 260px; width: 150px;">
+                            <img src="assets/journal/tape/v3.png" class="page-item" style="left: 72px; top: 250px; width: 80px; z-index: 1;">
+                        </div>
+                        <div class="page">
+                            <!-- 12 -->
+                            <div class="page-text" style="top: 30px;">Airbnb</div>
+                            <div class="page-text" style="top: 50px;"><small>20.05.2026</small></div>
+                            <img data-supabase-path="memories/12/outside.png" class="page-item protected-photo" style="left: 20px; top: 95px; width: 200px;">
+                            <div class="polaroid" style="left: 140px; top: 210px; transform: rotate(6deg);">
+                                <img data-supabase-path="memories/12/phone.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <img src="assets/journal/tape/v3.png" class="page-item" style="left: 180px; top: 202px; width: 80px; transform: rotate(4deg); z-index: 1;">
+                        </div>
+                        <div class="page">
+                            <!-- 13 -->
+                            <div class="page-text" style="top: 30px;">Graduation</div>
+                            <div class="page-text" style="top: 50px;"><small>23.05.2026</small></div>
+                            <img data-supabase-path="memories/13/robed.png" class="page-item protected-photo" style="left: 115px; top: 90px; width: 170px;">
+                            <img src="assets/journal/tape/v6.png" class="page-item" style="left: 160px; top: 80px; width: 80px; z-index: 1;">
+                            <div class="polaroid" style="left: 15px; top: 210px; transform: rotate(-6deg);">
+                                <img data-supabase-path="memories/13/event.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                        </div>
+                        <div class="page">
+                            <!-- 14 -->
+                            <div class="page-text" style="top: 30px;">Last Day Portland</div>
+                            <div class="page-text" style="top: 50px;"><small>24.05.2026</small></div>
+                            <img data-supabase-path="memories/14/lighthouse.png" class="page-item protected-photo" style="left: 25px; top: 95px; width: 200px;">
+                            <img src="assets/journal/tape/v2.png" class="page-item" style="left: 80px; top: 85px; width: 80px; z-index: 1;">
+                            <img data-supabase-path="memories/14/instant.png" class="page-item protected-photo" style="left: 175px; top: 230px; width: 100px;">
+                        </div>
+                        <div class="page">
+                            <!-- 15 -->
+                            <div class="page-text" style="top: 30px;">LDR Bloopers</div>
+                            <div class="page-text" style="top: 50px;"><small>25.06.2026</small></div>
+                            <div class="polaroid" style="left: 155px; top: 235px; transform: rotate(12deg); scale: 0.7;">
+                                <img data-supabase-path="memories/15/milk.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <div class="polaroid" style="left: 130px; top: 130px; transform: rotate(-12deg); scale: 0.7;">
+                                <img data-supabase-path="memories/15/beard.png" class="polaroid-photo protected-photo" style="object-position: 30% 82%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <div class="polaroid" style="left: 160px; top: 55px; transform: rotate(8deg); scale: 0.7;">
+                                <img data-supabase-path="memories/15/dog.png" class="polaroid-photo protected-photo" style="object-position: 30% 50%;">
+                                <img src="assets/journal/frames/polaroid/polaroid-frame.png" class="polaroid-frame">
+                            </div>
+                            <div class="iphone" style="left: 20px; top: 90px; transform: rotate(-4deg); scale: 0.9;">
+                                <img data-supabase-path="memories/15/cry.png" class="iphone-photo protected-photo" style="object-position: 50% 0%;">
+                                <img src="assets/journal/frames/iphone/iphone-frame.png" class="iphone-frame">
+                            </div>
+                        </div>
+                        <div class="page">
+                            <!-- 16 -->
+                            <div class="page-text" style="top: 30px;">3rd Anniversary</div>
+                            <div class="page-text" style="top: 50px;"><small>31.05.2026</small></div>
+                            <img data-supabase-path="memories/16/cake.png" class="page-item protected-photo" style="left: 30px; top: 115px; width: 200px;">
+                            <img src="assets/journal/tape/v2.png" class="page-item" style="left: 112px; top: 105px; width: 80px; transform: rotate(2deg); z-index: 1;">
+                        </div>
+                        <div class="page">
+                            and it's still being written...
+                        </div>
+                        <div class="hard"></div>
+                        <div class="hard string"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="skittles-ui" class="ui hide">
+                <div class="ui-canvas">
+                    <div class="skittles-scene">
+                        <img src="assets/skittles/bowl.png" class="skittles-bowl">
+                        <img src="assets/skittles/candy/blue.png" class="skittle"
+                            data-letter="letter-blue"
+                            style="left: 320px; top: 200px; width: 125px">
+                        <img src="assets/skittles/candy/green.png" class="skittle"
+                            data-letter="letter-green"
+                            style="left: 360px; top: 295px; width: 125px">
+                        <img src="assets/skittles/candy/pink.png" class="skittle"
+                            data-letter="letter-pink"
+                            style="left: 195px; top: 190px; width: 125px">
+                        <img src="assets/skittles/candy/purple.png" class="skittle"
+                            data-letter="letter-purple"
+                            style="left: 120px; top: 345px; width: 125px">
+                        <img src="assets/skittles/candy/red.png" class="skittle"
+                            data-letter="letter-red"
+                            style="left: 233px; top: 300px; width: 135px">
+                    </div>
+                    <div class="letter-modal hide" id="letter-blue">
+                        <button class="letter-close">×</button>
+                        <p>Mi cielo,<br><br>I love missing you.<br><br>It reminds me of how much you truly mean to me.<br>And to me that's worth the world.<br><br>Distance is nothing next to the size of a world like that.<br><br>You're more than worth my world,<br>You are my world,<br><br>Loco</p>
+                    </div>
+                    <div class="letter-modal hide" id="letter-green">
+                        <button class="letter-close">×</button>
+                        <p>Sup big snoop,</p><br><ul><li>I think you'd lose a fight a quokka.</li><li>I refuse to elaborate.</li><li>I miss your hickeys.</li><li>Can I get the chancla?</li><li>Anyway, that's all I had to say.</li></ul><p>Okay bye ☮️✌️</p>
+                    </div>
+                    <div class="letter-modal hide" id="letter-pink">
+                        <button class="letter-close">×</button>
+                        <p>Mi osita...<br><br>You don't know how many times I caught myself smiling<br>at the screen working on this this past week.<br><br>Thank you for making life so much more fun, even when we're so far apart.<br><br>If I could I'd hug, cuddle, and kiss you right now,<br>but most importantly,<br>I wouldn't trade our silly little moments for anything.<br><br>Te quiero ♡</p>
+                    </div>
+                    <div class="letter-modal hide" id="letter-purple">
+                        <button class="letter-close">×</button>
+                        <p>Okay flaca,<br><br>Don't let this get to your head,<br><br>But if you keep giving me that attitude,<br>I'm gonna have to remind you who's right.<br><br>...Or you'll just laugh in my face again.<br><br>Either way, I'm looking forward to it.<br><br>(;</p>
+                    </div>
+                    <div class="letter-modal hide" id="letter-red">
+                        <button class="letter-close">×</button>
+                        <p>Mi amor,<br><br>Thank you for choosing me every day.<br><br>I promise I'll keep choosing you too.<br><br>Te amo ♡</p>
+                    </div>
+                </div>
+            </div>
+            <div id="strips-ui" class="ui hide">Strips</div>
+            <svg viewBox="0 0 1440 900" id="main">
+                <image href="assets/layer-exports/bg-z0.png" x="0" y="0" width="1440" height="900" z-index="0"/>
+
+                <g class="clock" data-timezone="America/Mexico_City" data-x="1016" data-y="62">
+                    <g class="clock-daynight" transform="translate(-42, 15)">
+                        <image class="clock-daynight-disc" href="assets/clock/daynight-disc.png" x="-30" y="-30" width="60" height="60"/>
+                    </g>
+                    <image id="clock-online-mx" class="hide" href="assets/clock/online.png" x="-13.5" y="28.3" width="27" height="27"/>
+                    <text class="clock-day" x="47" y="3" font-size="10" text-anchor="middle">MON</text>
+                    <text class="clock-date" x="65" y="3" font-size="10" text-anchor="middle">21</text>
+                    <image class="clock-face" href="assets/clock/face-mx.png" x="-108.5" y="-108.5" width="217" height="217"/>
+                    <line class="clock-hand clock-hour" x1="0" y1="0" x2="0" y2="-55"/>
+                    <line class="clock-hand clock-minute" x1="0" y1="0" x2="0" y2="-82"/>
+                    <line class="clock-hand clock-second" x1="0" y1="0" x2="0" y2="-92"/>
+                    <circle class="clock-center" cx="0" cy="0" r="2"/>
+                </g>
+                <g class="clock" data-timezone="Europe/Madrid" data-x="1159" data-y="226">
+                    <g class="clock-daynight" transform="translate(-42, 15)">
+                        <image class="clock-daynight-disc" href="assets/clock/daynight-disc.png" x="-30" y="-30" width="60" height="60"/>
+                    </g>
+                    <image id="clock-online-it" class="hide" href="assets/clock/online.png" x="-13.5" y="28.3" width="27" height="27"/>
+                    <text class="clock-day" x="47" y="3" font-size="10" text-anchor="middle">MON</text>
+                    <text class="clock-date" x="65" y="3" font-size="10" text-anchor="middle">21</text>
+                    <image class="clock-face" href="assets/clock/face-it.png" x="-108.5" y="-108.5" width="217" height="217"/>
+                    <line class="clock-hand clock-hour" x1="0" y1="0" x2="0" y2="-55"/>
+                    <line class="clock-hand clock-minute" x1="0" y1="0" x2="0" y2="-82"/>
+                    <line class="clock-hand clock-second" x1="0" y1="0" x2="0" y2="-92"/>
+                    <circle class="clock-center" cx="0" cy="0" r="2"/>
+                </g>
+
+                <image href="assets/layer-exports/mailbox/closed.png" id="mailbox" class="interact"
+                    data-open="assets/layer-exports/mailbox/open.png"
+                    data-closed="assets/layer-exports/mailbox/closed.png"
+                    x="1121" y="518" width="143" height="315"/>
+                <image href="assets/layer-exports/monstera.png" class="sway sway-monstera" x="23" y="410" width="429" height="473" z-index="1"/>
+                <image href="assets/layer-exports/zz.png" class="sway sway-zz" x="1234" y="497" width="206" height="403" z-index="1"/>
+                <image href="assets/layer-exports/stanley.png" id="stanley" class="interact" x="17" y="661" width="118" height="217" z-index="1"/>
+
+                <image href="assets/layer-exports/desk.png" x="0" y="0" width="1440" height="900" z-index="2"/>
+
+                <image href="assets/layer-exports/journal.png" id="journal" class="interact" x="968" y="624" width="226" height="121" z-index="3"/>
+                <image href="assets/layer-exports/skittles.png" id="skittles" class="interact" x="1095" y="712" width="139" height="66" z-index="3"/>
+                <image href="assets/layer-exports/cards.png" id="cards" class="interact" x="403" y="699" width="230" height="77" z-index="3"/>
+                <image href="assets/layer-exports/popper.png" id="popper" class="interact" x="224" y="699" width="131" height="72" z-index="3"/>
+
+                <image href="assets/layer-exports/coffee-mug.png" x="334" y="603" width="89" height="86" z-index="3"/>
+                <foreignObject x="270" y="540" width="200" height="250" z-index="4">
+                    <div xmlns="http://www.w3.org/1999/xhtml" class="vapour">
+                        <span style="--i:1;"></span>
+                        <span style="--i:3;"></span>
+                        <span style="--i:16;"></span>
+                        <span style="--i:5;"></span>
+                        <span style="--i:13;"></span>
+                        <span style="--i:20;"></span>
+                        <span style="--i:6;"></span>
+                        <span style="--i:7;"></span>
+                        <span style="--i:10;"></span>
+                        <span style="--i:8;"></span>
+                        <span style="--i:17;"></span>
+                        <span style="--i:11;"></span>
+                        <span style="--i:12;"></span>
+                        <span style="--i:14;"></span>
+                        <span style="--i:2;"></span>
+                        <span style="--i:9;"></span>
+                        <span style="--i:15;"></span>
+                        <span style="--i:4;"></span>
+                        <span style="--i:19;"></span>
+                    </div>
+                </foreignObject>
+
+                <image href="assets/layer-exports/bears/bear-brown-body.png" x="708" y="420" width="152" height="104" z-index="4"/>
+                <image href="assets/layer-exports/bears/bear-white-body.png" x="580" y="413" width="149" height="111" z-index="4"/>
+                <image href="assets/layer-exports/bears/bear-brown-head.png" class="head head-brown" x="726" y="341" width="121" height="88" z-index="4"/>
+                <image href="assets/layer-exports/bears/bear-white-head.png" class="head head-white" x="598" y="341" width="121" height="88" z-index="4"/>
+
+                <image href="assets/layer-exports/strips.png" id="strips" class="interact" x="997" y="299" width="127" height="244" z-index="5"/>
+                <foreignObject x="570" y="213" width="304" height="50" z-index="">
+                    <div id="intro-text" class="intro-text"><div id="intro-line"></div></div>
+                </foreignObject>
+            </svg>
+        </div>
+        <script src="scripts/jquery.js"></script>
+        <script src="scripts/turn.js"></script>
+        <script type="module" src="scripts/auth.js"></script>
+        <script type="module" src="scripts/main.js"></script>
     </body>
 </html>
