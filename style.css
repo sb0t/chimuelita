@@ -178,10 +178,11 @@ svg {
 }
 
 .intro-text {
-    position: absolute;
-    top: 22%;
-    left: 50%;
-    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
     z-index: 5;
     color: #fff;
     font-size: 1.4rem;

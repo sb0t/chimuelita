@@ -67,6 +67,8 @@ document.getElementById('btn-email-next').addEventListener('click', () => {
 });
 
 document.getElementById('btn-password-next').addEventListener('click', async () => {
+    requestNotificationPermission();
+
     const password = document.getElementById('input-password').value;
     const errorEl = document.getElementById('error-password');
 
@@ -193,8 +195,6 @@ async function revealSite() {
 
     document.dispatchEvent(new CustomEvent('site-revealed'));
 
-    requestNotificationPermission();
-
     const { data: { user } } = await supabase.auth.getUser();
     if(user) {
         currentUserLabel = user.user_metadata?.label || 'someone';
@@ -220,3 +220,17 @@ async function revealSite() {
     await wait(1800);
     showStep('email');
 })();
+
+function bindEnterToSubmit(inputId, buttonId) {
+    document.getElementById(inputId).addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById(buttonId).click();
+        }
+    });
+}
+
+bindEnterToSubmit('input-email', 'btn-email-next');
+bindEnterToSubmit('input-password', 'btn-password-next');
+bindEnterToSubmit('input-enroll-code', 'btn-enroll-verify');
+bindEnterToSubmit('input-mfa-code', 'btn-mfa-verify');
