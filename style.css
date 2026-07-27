@@ -622,12 +622,20 @@ svg.dimming .interact.active {
 .strip-canvas {
     width: 640px;
     height: 560px;
-    color: #222;
-    background: #fdf6e3;
+    box-sizing: border-box;
     border-radius: 10px;
     padding: 20px;
-    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(6px);
+    color: #fff;
+}
+#strip-setup {
     overflow-y: auto;
+    padding-right: 4px;
 }
 .strip-screen h2 {
     text-align: center;
@@ -645,16 +653,27 @@ svg.dimming .interact.active {
     display: flex;
     gap: 8px;
 }
-.strip-count-btn, #strip-start-btn, .strip-result-actions button {
-    padding: 8px 16px;
+.strip-count-btn,
+#strip-start-btn,
+.strip-result-actions button {
+    padding: 10px 18px;
+    font-size: 1rem;
     border-radius: 6px;
-    border: 1px solid #ccc;
-    background: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
     cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s ease;
+}
+.strip-count-btn:hover,
+#strip-start-btn:hover,
+.strip-result-actions button:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 .strip-count-btn.active {
-    background: #4a3728;
-    color: #fff;
+    background: rgba(255, 255, 255, 0.3);
+    border-color: #fff;
 }
 .strip-slot-row {
     display: flex;
@@ -664,8 +683,11 @@ svg.dimming .interact.active {
     margin-bottom: 8px;
 }
 .strip-slot-row select {
-    padding: 6px;
+    padding: 8px;
     border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
 }
 .strip-bg-grid {
     display: flex;
@@ -676,12 +698,12 @@ svg.dimming .interact.active {
     width: 50px;
     height: 50px;
     border-radius: 6px;
-    border: 2px solid transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
     cursor: pointer;
     object-fit: cover;
 }
 .strip-bg-thumb.active {
-    border-color: #4a3728;
+    border-color: #fff;
 }
 .strip-date-check {
     display: flex;
@@ -689,24 +711,22 @@ svg.dimming .interact.active {
     gap: 8px;
     margin-bottom: 20px;
     cursor: pointer;
+    font-size: 0.9rem;
 }
 #strip-start-btn {
     width: 100%;
-    background: #4a3728;
-    color: #fff;
-    font-size: 1rem;
+    margin-top: 8px;
 }
 .strip-status {
     text-align: center;
     font-size: 0.85rem;
-    color: #777;
+    color: rgba(255, 255, 255, 0.6);
     min-height: 1.2em;
 }
 
 .strip-frame {
     position: relative;
     width: 220px;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -734,14 +754,18 @@ svg.dimming .interact.active {
 }
 .strip-countdown-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(0,0,0,0.6);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.75);
     color: #fff;
-    font-size: 1.4rem;
+    font-size: 2rem;
     font-weight: bold;
-    padding: 6px 14px;
-    border-radius: 20px;
+    padding: 14px 22px;
+    border-radius: 50%;
+    min-width: 24px;
+    text-align: center;
+    z-index: 6;
 }
 
 #strip-final-canvas {

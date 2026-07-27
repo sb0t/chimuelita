@@ -180,24 +180,23 @@ async function startCaptureFlow(count, modes, bgId, dateOn, isInitiator) {
 
     try {
         await ensureCamera();
+        buildSlotPreviews();
+
+        for (let i = 0; i < slotCount; i++) {
+            await runCountdown(3);
+            await captureSlot(i);
+        }
+
+        await renderFinalStrip();
+
+        captureScreen.classList.add('hide');
+        resultScreen.classList.remove('hide');
     } catch (err) {
-        captureStatusEl.textContent = 'Camera permission needed — check your browser settings.';
+        console.error('Photo booth error:', err);
+        captureStatusEl.textContent = 'Something went wrong — try again.';
+    } finally {
         sessionActive = false;
-        return;
     }
-
-    buildSlotPreviews();
-
-    for (let i = 0; i < slotCount; i++) {
-        await runCountdown(3);
-        await captureSlot(i);
-    }
-
-    await renderFinalStrip();
-
-    captureScreen.classList.add('hide');
-    resultScreen.classList.remove('hide');
-    sessionActive = false;
 }
 
 function buildSlotPreviews() {
@@ -266,7 +265,12 @@ async function renderFinalStrip() {
     const ctx = finalCanvas.getContext('2d');
 
     const bgImg = await loadImage(selectedBg.image);
-    ctx.drawImage(bgImg, 0, 0, strip_w, strip_h);
+    if (bgImg) {
+        ctx.drawImage(bgImg, 0, 0, strip_w, strip_h);
+    } else {
+        ctx.fillStyle = '#fdf6e3'; // fallback solid color if bg asset is missing
+        ctx.fillRect(0, 0, strip_w, strip_h);
+    }
 
     for (let i = 0; i < slotCount; i++) {
         const mode = slotModes[i];
@@ -290,7 +294,7 @@ async function renderFinalStrip() {
 
     if (selectedBg.overlay) {
         const overlayImg = await loadImage(selectedBg.overlay);
-        ctx.drawImage(overlayImg, 0, 0, strip_w, strip_h);
+        if(overlayImg) ctx.drawImage(overlayImg, 0, 0, strip_w, strip_h);
     }
 
     if (showDate) {
@@ -306,7 +310,7 @@ function loadImage(src) {
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => resolve(img);
-        img.onerror = reject;
+        img.onerror = () => resolve(null);
         img.src = src;
     });
 }

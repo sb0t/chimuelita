@@ -207,7 +207,13 @@ async function revealSite() {
     }
 }
 
+const DEV_SKIP_AUTH = true; // set FALSE before pushing! (or delete whole testing feature)
 (async () => {
+    if (DEV_SKIP_AUTH) {
+        document.getElementById('auth-flow').classList.add('hide');
+        document.getElementById('site-content').classList.remove('hide');
+        return;
+    }
     showStep('splash');
     if(isRemembered()) {
         const { data: { session } } = await supabase.auth.getSession();
