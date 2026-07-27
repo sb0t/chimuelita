@@ -256,9 +256,9 @@ async function captureSlot(slotIndex) {
 }
 
 async function renderFinalStrip() {
-    const SLOT_W = 400, SLOT_H = 300, PAD = 24, GAP = 14;
+    const SLOT_W = 400, SLOT_H = 300, PAD = 24, GAP = 14, DATE_FOOTER = 40;
     const strip_w = SLOT_W + PAD * 2;
-    const strip_h = PAD * 2 + slotCount * SLOT_H + (slotCount - 1) * GAP + (showDate ? 40 : 0);
+    const strip_h = PAD * 2 + slotCount * SLOT_H + (slotCount - 1) * GAP + DATE_FOOTER;
 
     finalCanvas.width = strip_w;
     finalCanvas.height = strip_h;
