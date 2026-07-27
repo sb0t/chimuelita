@@ -335,3 +335,20 @@ document.getElementById('strip-retake-btn').addEventListener('click', () => {
     resultScreen.classList.add('hide');
     setupScreen.classList.remove('hide');
 });
+
+function stopCamera() {
+    if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+    }
+    localVideoEl = null;
+}
+
+const stripsUiEl = document.getElementById('strips-ui');
+const stripsVisibilityObserver = new MutationObserver(() => {
+    if (stripsUiEl.classList.contains('hide')) {
+        stopCamera();
+    }
+});
+stripsVisibilityObserver.observe(stripsUiEl, { attributes: true, attributeFilter: ['class'] });
+window.addEventListener('beforeunload', stopCamera);

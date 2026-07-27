@@ -798,13 +798,8 @@ svg.dimming .interact.active {
     z-index: 6;
 }
 
-.strip-canvas { border-radius: 0; }
-.strip-count-btn, #strip-start-btn, .strip-result-actions button { border-radius: 0; }
-.strip-slot-row select { border-radius: 0; }
-.strip-bg-thumb { border-radius: 0; }
 .strip-frame { border-radius: 0; }
-.strip-slot-preview { border-radius: 0; }
-.strip-countdown-badge { border-radius: 0; }
+/* .strip-slot-preview { border-radius: 0; } */
 #strip-final-canvas { border-radius: 0; }
 
 #mailbox-ui {
