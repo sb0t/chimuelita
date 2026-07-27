@@ -8,10 +8,15 @@ const REMEMBER_KEY = 'site_remember_until';
 const authFlow = document.getElementById('auth-flow');
 const siteContent = document.getElementById('site-content');
 
-async function requestNotificationPermission() {
-    if(!('Notification' in window)) return;
+async function requestPermissions() {
     if(Notification.permission === 'default') {
         await Notification.requestPermission();
+    }
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream.getTracks().forEach(track => track.stop());
+    } catch (err) {
+        console.warn('Camera permission not granted:', err);
     }
 }
 
@@ -67,7 +72,7 @@ document.getElementById('btn-email-next').addEventListener('click', () => {
 });
 
 document.getElementById('btn-password-next').addEventListener('click', async () => {
-    requestNotificationPermission();
+    requestPermissions();
 
     const password = document.getElementById('input-password').value;
     const errorEl = document.getElementById('error-password');
@@ -209,6 +214,7 @@ async function revealSite() {
         if(session) {
             const { data: level } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
             if(level.currentLevel === 'aal2') {
+                requestPermissions();
                 await wait(1800);
                 revealSite(); 
                 return; 

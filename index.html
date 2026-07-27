@@ -328,7 +328,43 @@
                     </div>
                 </div>
             </div>
-            <div id="strips-ui" class="ui hide">Strips</div>
+            <div id="strips-ui" class="ui hide">
+                <div class="ui-canvas strip-canvas">
+                    <div id="strip-setup" class="strip-screen">
+                        <h2>Photo Booth</h2>
+                        <div class="strip-option-group">
+                            <label>Number of photos</label>
+                            <div class="strip-count-toggle">
+                                <button type="button" class="strip-count-btn active" data-count="3">3</button>
+                                <button type="button" class="strip-count-btn" data-count="4">4</button>
+                            </div>
+                        </div>
+                        <div id="strip-slot-modes" class="strip-option-group"></div>
+                        <div class="strip-option-group">
+                            <label>Background</label>
+                            <div id="strip-bg-options" class="strip-bg-grid"></div>
+                        </div>
+                        <label class="strip-date-check">
+                            <input type="checkbox" id="strip-date-toggle" checked>
+                            Show today's date
+                        </label>
+                        <button id="strip-start-btn">Start</button>
+                        <p class="strip-status" id="strip-setup-status"></p>
+                    </div>
+                    <div id="strip-capture" class="strip-screen hide">
+                        <div class="strip-frame" id="strip-frame"></div>
+                        <div class="strip-countdown-badge" id="strip-countdown-badge"></div>
+                        <p class="strip-status" id="strip-capture-status"></p>
+                    </div>
+                    <div id="strip-result" class="strip-screen hide">
+                        <canvas id="strip-final-canvas"></canvas>
+                        <div class="strip-result-actions">
+                            <button id="strip-download-btn">Download</button>
+                            <button id="strip-retake-btn">Retake</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <svg viewBox="0 0 1440 900" id="main">
                 <image href="assets/layer-exports/bg-z0.png" x="0" y="0" width="1440" height="900" z-index="0"/>
 
@@ -414,5 +450,6 @@
         <script src="scripts/turn.js"></script>
         <script type="module" src="scripts/auth.js"></script>
         <script type="module" src="scripts/main.js"></script>
+        <script type="module" src="scripts/photobooth.js"></script>
     </body>
 </html>
