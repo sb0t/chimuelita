@@ -179,18 +179,46 @@ function setupPresence(userId) {
 
 export let currentUserLabel = null;
 
-async function loadProtectedImage(imgElement, path) {
+async function loadProtectedImage(imgElement, path, attempt = 1) {
+    const cacheKey = `signed_${path}`;
+    const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+
+    if (cached && cached.expires > Date.now()) {
+        imgElement.src = cached.url;
+        return;
+    }
+
     const { data, error } = await supabase.storage
         .from('private-photos')
         .createSignedUrl(path, 60 * 60);
-    if(error) { console.error('Could not load protected image:', path, error); return; }
+
+    if (error) {
+        if (attempt < 3) {
+            await wait(attempt * 500);
+            return loadProtectedImage(imgElement, path, attempt + 1);
+        }
+        console.error('Could not load protected image after retries:', path, error);
+        return;
+    }
+
+    localStorage.setItem(cacheKey, JSON.stringify({
+        url: data.signedUrl,
+        expires: Date.now() + 55 * 60 * 1000,
+    }));
     imgElement.src = data.signedUrl;
 }
 
-function loadProtectedAssets() {
-    document.querySelectorAll('.protected-photo').forEach(img => {
-        loadProtectedImage(img, img.dataset.supabasePath);
-    });
+async function loadProtectedAssets() {
+    const images = Array.from(document.querySelectorAll('.protected-photo'));
+    const BATCH_SIZE = 4;
+
+    for (let i = 0; i < images.length; i += BATCH_SIZE) {
+        const batch = images.slice(i, i + BATCH_SIZE);
+        await Promise.all(
+            batch.map(img => loadProtectedImage(img, img.dataset.supabasePath))
+        );
+        await wait(300);
+    }
 }
 
 async function revealSite() {
