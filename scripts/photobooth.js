@@ -33,7 +33,6 @@ const SLOT_MODE_OPTIONS = [
 
 let slotCount = 3;
 let selectedBg = STRIP_BACKGROUNDS[0];
-let showDate = true;
 let slotModes = [];
 
 const setupScreen = document.getElementById('strip-setup');
@@ -110,11 +109,6 @@ document.querySelectorAll('.strip-count-btn').forEach(btn => {
     });
 });
 
-document.getElementById('strip-date-toggle').addEventListener('change', (e) => {
-    showDate = e.target.checked;
-    broadcastSetupUpdate();
-});
-
 renderSlotModeOptions();
 renderBgOptions();
 
@@ -126,8 +120,8 @@ let capturedFrames = {}; // { slotIndex: { [label]: dataUrl } }
 let resolveFrameWaiters = {}; // { `${slotIndex}-${label}`: resolveFn }
 
 stripChannel.on('broadcast', { event: 'session-start' }, ({ payload }) => {
-    if (sessionActive) return; // ignore broadcast bouncing back if using self-broadcast
-    startCaptureFlow(payload.slotCount, payload.slotModes, payload.bgId, payload.showDate, false);
+    if (sessionActive) return;
+    startCaptureFlow(payload.slotCount, payload.slotModes, payload.bgId, false);
 });
 
 stripChannel.on('broadcast', { event: 'frame' }, ({ payload }) => {
@@ -146,9 +140,9 @@ document.getElementById('strip-start-btn').addEventListener('click', () => {
     stripChannel.send({
         type: 'broadcast',
         event: 'session-start',
-        payload: { slotCount, slotModes, bgId: selectedBg.id, showDate }
+        payload: { slotCount, slotModes, bgId: selectedBg.id }
     });
-    startCaptureFlow(slotCount, slotModes, selectedBg.id, showDate, true);
+    startCaptureFlow(slotCount, slotModes, selectedBg.id, true);
 });
 
 function wait(ms) {
@@ -184,13 +178,12 @@ function slotNeedsPartner(mode) {
     return mode !== 'self';
 }
 
-async function startCaptureFlow(count, modes, bgId, dateOn, isInitiator) {
+async function startCaptureFlow(count, modes, bgId, isInitiator) {
     sessionActive = true;
     capturedFrames = {};
     slotCount = count;
     slotModes = modes;
     selectedBg = STRIP_BACKGROUNDS.find(b => b.id === bgId) || STRIP_BACKGROUNDS[0];
-    showDate = dateOn;
 
     setupScreen.classList.add('hide');
     captureScreen.classList.remove('hide');
@@ -325,15 +318,6 @@ async function renderFinalStrip() {
         const overlayImg = await loadImage(overlayPath);
         if (overlayImg) ctx.drawImage(overlayImg, 0, 0, strip_w, strip_h);
     }
-
-    if (showDate) {
-        ctx.fillStyle = '#4a3728';
-        ctx.font = '20px Caveat, cursive';
-        ctx.textAlign = 'center';
-        const dateStr = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-        const dateY = TOP_MARGIN + slotCount * SLOT_HEIGHT + (slotCount - 1) * SLOT_GAP + BOTTOM_MARGIN / 2 + 7;
-        ctx.fillText(dateStr, strip_w/2, dateY);
-    }
 }
 
 function loadImage(src) {
@@ -388,7 +372,7 @@ function broadcastSetupUpdate() {
     stripChannel.send({
         type: 'broadcast',
         event: 'setup-update',
-        payload: { slotCount, slotModes, bgId: selectedBg.id, showDate }
+        payload: { slotCount, slotModes, bgId: selectedBg.id }
     });
 }
 
@@ -402,12 +386,10 @@ stripChannel.on('broadcast', { event: 'setup-update' }, ({ payload }) => {
     slotCount = payload.slotCount;
     slotModes = payload.slotModes;
     selectedBg = STRIP_BACKGROUNDS.find(b => b.id === payload.bgId) || STRIP_BACKGROUNDS[0];
-    showDate = payload.showDate;
 
     document.querySelectorAll('.strip-count-btn').forEach(b => {
         b.classList.toggle('active', parseInt(b.dataset.count, 10) === slotCount);
     });
-    document.getElementById('strip-date-toggle').checked = showDate;
 
     renderSlotModeOptions();
     renderBgOptions();

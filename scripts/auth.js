@@ -207,7 +207,7 @@ async function revealSite() {
     }
 }
 
-const DEV_SKIP_AUTH = false; // set FALSE before pushing! (or delete whole testing feature)
+const DEV_SKIP_AUTH = true; // set FALSE before pushing! (or delete whole testing feature)
 (async () => {
     if (DEV_SKIP_AUTH) {
         document.getElementById('auth-flow').classList.add('hide');
