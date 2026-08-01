@@ -4,11 +4,25 @@ const MX_LABEL = 'chimuelita';
 const IT_LABEL = 'loco';
 
 const STRIP_BACKGROUNDS = [
-    { id: 'cream',   thumb: 'assets/strips/bg/cream-thumb.png',   image: 'assets/strips/bg/cream.png' },
-    { id: 'polaroid',thumb: 'assets/strips/bg/polaroid-thumb.png',image: 'assets/strips/bg/polaroid.png' },
-    { id: 'hearts',  thumb: 'assets/strips/bg/hearts-thumb.png',  image: 'assets/strips/bg/hearts.png', overlay: 'assets/strips/bg/hearts-overlay.png' },
-    { id: 'film',    thumb: 'assets/strips/bg/film-thumb.png',    image: 'assets/strips/bg/film.png' },
+    {
+        id: 'ily',
+        label: 'ILY',
+        bg: { 3: 'assets/strips/bg/ily-3.png', 4: 'assets/strips/bg/ily-4.png' },
+    },
+    {
+        id: 'og',
+        label: 'OG',
+        bg: { 3: 'assets/strips/bg/og-3.png', 4: 'assets/strips/bg/og-4.png' },
+        overlay: { 3: 'assets/strips/ov/og-3.png', 4: 'assets/strips/ov/og-4.png' },
+    },
 ];
+
+function currentBgImage() {
+    return selectedBg.bg[slotCount] || selectedBg.bg[3];
+}
+function currentOverlayImage() {
+    return selectedBg.overlay ? (selectedBg.overlay[slotCount] || null) : null;
+}
 
 const SLOT_MODE_OPTIONS = [
     { value: 'self',        label: () => `Just me (${currentUserLabel || 'me'})` },
@@ -62,6 +76,7 @@ function renderSlotModeOptions() {
         });
         select.addEventListener('change', () => {
             slotModes[i] = select.value;
+            brodcastSetupUpdate();
         });
 
         row.append(label, select);
@@ -73,11 +88,12 @@ function renderBgOptions() {
     bgOptionsEl.innerHTML = '';
     STRIP_BACKGROUNDS.forEach(bg => {
         const img = document.createElement('img');
-        img.src = bg.thumb;
+        img.src = bg.bg[slotCount] || bg.bg[3];
         img.className = 'strip-bg-thumb' + (bg.id === selectedBg.id ? ' active' : '');
         img.addEventListener('click', () => {
             selectedBg = bg;
             renderBgOptions();
+            broadcastSetupUpdate();
         });
         bgOptionsEl.appendChild(img);
     });
@@ -89,11 +105,14 @@ document.querySelectorAll('.strip-count-btn').forEach(btn => {
         btn.classList.add('active');
         slotCount = parseInt(btn.dataset.count, 10);
         renderSlotModeOptions();
+        renderBgOptions();
+        broadcastSetupUpdate();
     });
 });
 
 document.getElementById('strip-date-toggle').addEventListener('change', (e) => {
     showDate = e.target.checked;
+    broadcastSetupUpdate();
 });
 
 renderSlotModeOptions();
@@ -200,7 +219,8 @@ async function startCaptureFlow(count, modes, bgId, dateOn, isInitiator) {
 }
 
 function buildSlotPreviews() {
-    stripFrameEl.style.backgroundImage = `url('${selectedBg.image}')`;
+    stripFrameEl.style.backgroundImage = `url('${currentBgImage()}')`;
+    stripFrameEl.style.aspectRatio = `${STRIP_WIDTH} / ${stripHeight(slotCount)}`;
     stripFrameEl.innerHTML = '';
     for (let i = 0; i < slotCount; i++) {
         const preview = document.createElement('div');
@@ -232,7 +252,6 @@ async function captureSlot(slotIndex) {
     capturedFrames[slotIndex] = capturedFrames[slotIndex] || {};
     capturedFrames[slotIndex][currentUserLabel] = dataUrl;
 
-    // show local preview immediately
     const previewEl = document.getElementById(`strip-slot-preview-${slotIndex}`);
     if (previewEl) {
         const img = document.createElement('img');
@@ -255,46 +274,56 @@ async function captureSlot(slotIndex) {
     }
 }
 
+const STRIP_WIDTH = 440;
+const SLOT_WIDTH = 400, SLOT_HEIGHT = 300;
+const SLOT_GAP = 12;
+const SIDE_MARGIN = (STRIP_WIDTH - SLOT_WIDTH)/2;
+const TOP_MARGIN = 100, BOTTOM_MARGIN = 100;
+
+function stripHeight(count) {
+    return TOP_MARGIN + count * SLOT_HEIGHT + (count-1) * SLOT_GAP + BOTTOM_MARGIN;
+}
+
 async function renderFinalStrip() {
-    const SLOT_W = 400, SLOT_H = 300, PAD = 24, GAP = 14, DATE_FOOTER = 40;
-    const strip_w = SLOT_W + PAD * 2;
-    const strip_h = PAD * 2 + slotCount * SLOT_H + (slotCount - 1) * GAP + DATE_FOOTER;
+    const strip_w = STRIP_WIDTH;
+    const strip_h = stripHeight(slotCount);
 
     finalCanvas.width = strip_w;
     finalCanvas.height = strip_h;
     const ctx = finalCanvas.getContext('2d');
 
-    const bgImg = await loadImage(selectedBg.image);
+    const bgImg = await loadImage(currentBgImage());
     if (bgImg) {
         ctx.drawImage(bgImg, 0, 0, strip_w, strip_h);
     } else {
-        ctx.fillStyle = '#fdf6e3'; // fallback solid color if bg asset is missing
+        ctx.fillStyle = '#fdf6e3';
         ctx.fillRect(0, 0, strip_w, strip_h);
     }
 
     for (let i = 0; i < slotCount; i++) {
         const mode = slotModes[i];
-        const y = PAD + i * (SLOT_H + GAP);
+        const y = TOP_MARGIN + i * (SLOT_HEIGHT + SLOT_GAP);
         const frames = capturedFrames[i] || {};
         const selfUrl = frames[currentUserLabel];
         const partnerUrl = frames[partnerLabel()];
 
         if (mode === 'self') {
-            await drawCover(ctx, selfUrl, PAD, y, SLOT_W, SLOT_H);
+            await drawCover(ctx, selfUrl, SIDE_MARGIN, y, SLOT_WIDTH, SLOT_HEIGHT);
         } else if (mode === 'partner') {
-            await drawCover(ctx, partnerUrl || selfUrl, PAD, y, SLOT_W, SLOT_H);
+            await drawCover(ctx, partnerUrl || selfUrl, SIDE_MARGIN, y, SLOT_WIDTH, SLOT_HEIGHT);
         } else if (mode === 'split-self-left') {
-            await drawCover(ctx, selfUrl, PAD, y, SLOT_W / 2, SLOT_H);
-            await drawCover(ctx, partnerUrl || selfUrl, PAD + SLOT_W / 2, y, SLOT_W / 2, SLOT_H);
+            await drawCover(ctx, selfUrl, SIDE_MARGIN, y, SLOT_WIDTH / 2, SLOT_HEIGHT);
+            await drawCover(ctx, partnerUrl || selfUrl, SIDE_MARGIN + SLOT_WIDTH / 2, y, SLOT_WIDTH / 2, SLOT_HEIGHT);
         } else if (mode === 'split-self-right') {
-            await drawCover(ctx, partnerUrl || selfUrl, PAD, y, SLOT_W / 2, SLOT_H);
-            await drawCover(ctx, selfUrl, PAD + SLOT_W / 2, y, SLOT_W / 2, SLOT_H);
+            await drawCover(ctx, partnerUrl || selfUrl, SIDE_MARGIN, y, SLOT_WIDTH / 2, SLOT_HEIGHT);
+            await drawCover(ctx, selfUrl, SIDE_MARGIN + SLOT_WIDTH / 2, y, SLOT_WIDTH / 2, SLOT_HEIGHT);
         }
     }
 
-    if (selectedBg.overlay) {
-        const overlayImg = await loadImage(selectedBg.overlay);
-        if(overlayImg) ctx.drawImage(overlayImg, 0, 0, strip_w, strip_h);
+    const overlayPath = currentOverlayImage();
+    if (overlayPath) {
+        const overlayImg = await loadImage(overlayPath);
+        if (overlayImg) ctx.drawImage(overlayImg, 0, 0, strip_w, strip_h);
     }
 
     if (showDate) {
@@ -302,7 +331,8 @@ async function renderFinalStrip() {
         ctx.font = '20px Caveat, cursive';
         ctx.textAlign = 'center';
         const dateStr = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-        ctx.fillText(dateStr, strip_w / 2, strip_h - 14);
+        const dateY = TOP_MARGIN + slotCount * SLOT_HEIGHT + (slotCount - 1) * SLOT_GAP + BOTTOM_MARGIN / 2 + 7;
+        ctx.fillText(dateStr, strip_w/2, dateY);
     }
 }
 
@@ -352,3 +382,35 @@ const stripsVisibilityObserver = new MutationObserver(() => {
 });
 stripsVisibilityObserver.observe(stripsUiEl, { attributes: true, attributeFilter: ['class'] });
 window.addEventListener('beforeunload', stopCamera);
+
+function broadcastSetupUpdate() {
+    if (sessionActive) return;
+    stripChannel.send({
+        type: 'broadcast',
+        event: 'setup-update',
+        payload: { slotCount, slotModes, bgId: selectedBg.id, showDate }
+    });
+}
+
+let applyingRemoteUpdate = false;
+
+stripChannel.on('broadcast', { event: 'setup-update' }, ({ payload }) => {
+    if (sessionActive) return;
+
+    applyingRemoteUpdate = true;
+
+    slotCount = payload.slotCount;
+    slotModes = payload.slotModes;
+    selectedBg = STRIP_BACKGROUNDS.find(b => b.id === payload.bgId) || STRIP_BACKGROUNDS[0];
+    showDate = payload.showDate;
+
+    document.querySelectorAll('.strip-count-btn').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.count, 10) === slotCount);
+    });
+    document.getElementById('strip-date-toggle').checked = showDate;
+
+    renderSlotModeOptions();
+    renderBgOptions();
+
+    applyingRemoteUpdate = false;
+});
