@@ -235,6 +235,7 @@ async function revealSite() {
     }
 }
 
+window.supabase = supabase;
 const DEV_SKIP_AUTH = false; // set FALSE before pushing! (or delete whole testing feature)
 (async () => {
     if (DEV_SKIP_AUTH) {

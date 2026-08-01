@@ -214,6 +214,10 @@ async function startCaptureFlow(count, modes, bgId, isInitiator) {
 function buildSlotPreviews() {
     stripFrameEl.style.backgroundImage = `url('${currentBgImage()}')`;
     stripFrameEl.style.aspectRatio = `${STRIP_WIDTH} / ${stripHeight(slotCount)}`;
+    stripFrameEl.style.setProperty('--top-pad', `${TOP_MARGIN * PREVIEW_SCALE}px`);
+    stripFrameEl.style.setProperty('--bottom-pad', `${BOTTOM_MARGIN * PREVIEW_SCALE}px`);
+    stripFrameEl.style.setProperty('--side-pad', `${SIDE_MARGIN * PREVIEW_SCALE}px`);
+    stripFrameEl.style.setProperty('--slot-gap', `${SLOT_GAP * PREVIEW_SCALE}px`);
     stripFrameEl.innerHTML = '';
     for (let i = 0; i < slotCount; i++) {
         const preview = document.createElement('div');
