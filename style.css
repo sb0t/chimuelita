@@ -433,10 +433,27 @@ svg.dimming .interact.active {
     max-height: 80vh;
 }
 
+.journal-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-style: italic;
+    opacity: 0.7;
+}
+.journal-loading.hide {
+    display: none;
+}
 .flipbook {
     width: var(--flipbook-width);
     height: var(--flipbook-height);
-    transition: margin-left 0.4s ease;
+    transition: margin-left 0.4s ease, opacity 0.4s ease;
+    visibility: hidden;
+    opacity: 0;
+}
+.flipbook.ready {
+    visibility: visible;
+    opacity: 1;
 }
 .flipbook .hard.string {
     background-image: url('assets/journal/layout/hard-string.png');

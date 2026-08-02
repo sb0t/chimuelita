@@ -224,9 +224,11 @@ async function loadProtectedAssets() {
 async function revealSite() {
     authFlow.classList.add('hide');
     siteContent.classList.remove('hide');
-    loadProtectedAssets();
 
     document.dispatchEvent(new CustomEvent('site-revealed'));
+
+    await loadProtectedAssets();
+    document.dispatchEvent(new CustomEvent('protected-assets-loaded'));
 
     const { data: { user } } = await supabase.auth.getUser();
     if(user) {

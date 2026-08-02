@@ -302,12 +302,17 @@ function updateBookCentering() {
     }
     flipbook.css("margin-left", marginLeft);
 }
-$(".flipbook").turn({
-    width: FLIPBOOK_WIDTH,
-    height: FLIPBOOK_HEIGHT,
-    autocenter: true
-}).bind("turned", updateBookCentering);
-updateBookCentering();
+document.addEventListener('protected-assets-loaded', () => {
+    $(".flipbook").turn({
+        width: FLIPBOOK_WIDTH,
+        height: FLIPBOOK_HEIGHT,
+        autocenter: true
+    }).bind("turned", updateBookCentering);
+    updateBookCentering();
+
+    flipbook.addClass('ready');
+    document.getElementById('journal-loading').classList.add('hide');
+}, { once: true });
 
 document.querySelectorAll(".skittle").forEach(skittle => {
     skittle.addEventListener("click", () => {
