@@ -1,3 +1,3 @@
 # Chimuelita
 
-A private website for me and my girl to enjoy our LDR.
+Ideally a private website for me and my now ex-girl to enjoy our short lived LDR.
